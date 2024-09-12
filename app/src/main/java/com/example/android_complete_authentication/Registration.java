@@ -19,15 +19,15 @@ import com.example.android_complete_authentication.databinding.ActivityRegistrat
 
 public class Registration extends AppCompatActivity {
 
-    private TextView signinLink;
+    private TextView signInLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        signinLink=findViewById(R.id.signinLink);
-        signinLink.setOnClickListener(new View.OnClickListener() {
+        signInLink=findViewById(R.id.signInLink);
+        signInLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent mainIntent = new Intent(Registration.this, Login.class);
