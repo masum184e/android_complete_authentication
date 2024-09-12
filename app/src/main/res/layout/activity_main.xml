@@ -7,49 +7,32 @@
     android:background="@android:color/white"
     tools:context=".MainActivity">
 
-    <!-- Top Left Circular Shape -->
-    <View
-        android:id="@+id/topLeftCircle"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:background="@drawable/circle_shape_top_left"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <!-- Bottom Right Circular Shape -->
-    <View
-        android:id="@+id/bottomRightCircle"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:background="@drawable/circle_shape_bottom_right"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Center Logo (Phone Icon) -->
     <ImageView
-        android:id="@+id/centerIcon"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@drawable/ic_launcher_background"
-    android:tint="@color/black"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"/>
+        android:id="@+id/authIcon"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="32dp"
+        android:contentDescription="@string/auth_icon_desc"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:srcCompat="@drawable/authentication_icon" />
 
-    <!-- Circular Text around the Icon -->
     <TextView
-        android:id="@+id/circularText"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mobile Login System"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:fontFamily="sans-serif"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/centerIcon"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Complete Authentication"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/authIcon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
