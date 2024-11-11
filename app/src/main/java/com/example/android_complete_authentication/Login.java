@@ -23,6 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Login extends AppCompatActivity {
+
     private TextView signupLink;
     private Button btnSignIn;
     SharedPreferences sharedPreferences;
@@ -80,8 +81,7 @@ public class Login extends AppCompatActivity {
                     LoginResponse loginResponse = response.body();
                     Toast.makeText(Login.this, loginResponse.getMessage(), Toast.LENGTH_LONG).show();
                     if ("true".equals(loginResponse.isStatus())) {
-                        getSharedPreferences("AUTHENTICATION", Context.MODE_PRIVATE)
-                                .edit().putString("authToken", loginResponse.getToken()).apply();
+                        getSharedPreferences("AUTHENTICATION", Context.MODE_PRIVATE).edit().putString("authToken", loginResponse.getToken()).apply();
                         startActivity(new Intent(Login.this, Profile.class));
                         finish();
                     }
