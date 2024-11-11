@@ -9,9 +9,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.android_complete_authentication.api.ApiService;
+import com.example.android_complete_authentication.api.RetrofitClient;
+import com.example.android_complete_authentication.models.LoginRequest;
+import com.example.android_complete_authentication.models.LoginResponse;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Login extends AppCompatActivity {
     private TextView signupLink;
@@ -19,6 +28,7 @@ public class Login extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     private TextInputLayout getEmail, getPassword;
     private TextInputEditText emailEditText, passwordEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +51,8 @@ public class Login extends AppCompatActivity {
         getPassword = findViewById(R.id.getPassword);
 
         // GETTING ELEMENT VALUE
-        emailEditText = (TextInputEditText)getEmail.getEditText();
-        passwordEditText = (TextInputEditText)getPassword.getEditText();
+        emailEditText = (TextInputEditText) getEmail.getEditText();
+        passwordEditText = (TextInputEditText) getPassword.getEditText();
 
         // HANDLING SIGNUP BUTTON
         signupLink.setOnClickListener(view -> startActivity(new Intent(this, Registration.class)));
@@ -52,14 +62,39 @@ public class Login extends AppCompatActivity {
             String email = emailEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
 
-            getEmail.setError(email.isEmpty()?"Email is required":null);
-            getPassword.setError(password.isEmpty()?"Password is required":null);
+            getEmail.setError(email.isEmpty() ? "Email is required" : null);
+            getPassword.setError(password.isEmpty() ? "Password is required" : null);
 
             if (!email.isEmpty() && !password.isEmpty()) loginUser(email, password);
         });
     }
+
     private void loginUser(String email, String password) {
-        System.out.println(email+" "+password);
-        startActivity(new Intent(this, Profile.class));
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<LoginResponse> call = apiService.loginUser(new LoginRequest(email, password));
+
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    LoginResponse loginResponse = response.body();
+                    Toast.makeText(Login.this, loginResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    if ("true".equals(loginResponse.isStatus())) {
+                        getSharedPreferences("AUTHENTICATION", Context.MODE_PRIVATE)
+                                .edit().putString("authToken", loginResponse.getToken()).apply();
+                        startActivity(new Intent(Login.this, Profile.class));
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(Login.this, "Failed to log in", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Toast.makeText(Login.this, "Network error occurred", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 }
