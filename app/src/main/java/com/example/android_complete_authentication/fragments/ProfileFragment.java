@@ -43,10 +43,11 @@ public class ProfileFragment extends Fragment {
         sharedPreferences = requireActivity().getSharedPreferences("AUTHENTICATION", Context.MODE_PRIVATE);
 
         logoutBtn.setOnClickListener(btnView -> {
-            startActivity(new Intent(getContext(), Login.class));
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove("authToken");
             editor.commit();
+            Toast.makeText(getContext(),"Logged Out Successfully",Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getContext(), Login.class));
         });
 
 
