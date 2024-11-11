@@ -1,6 +1,8 @@
 package com.example.android_complete_authentication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,48 +17,50 @@ import com.google.android.material.textfield.TextInputLayout;
 public class Login extends AppCompatActivity {
     private TextView signupLink;
     private Button btnSignIn;
+    SharedPreferences sharedPreferences;
     private TextInputLayout getEmail, getPassword;
     private TextInputEditText emailEditText, passwordEditText;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // IF USER IS LOG IN REDIRECT TO PROFILE ACTIVITY
+        sharedPreferences = getSharedPreferences("AUTHENTICATION", Context.MODE_PRIVATE);
+        if (sharedPreferences.contains("authToken")) {
+            startActivity(new Intent(this, Profile.class));
+            finish();
+            return;
+        }
+
+        // SETUP ACTIVITY LAYOUT
         setContentView(R.layout.activity_login);
 
+        // SELECTING ELEMENT
         signupLink = findViewById(R.id.signupLink);
         btnSignIn = findViewById(R.id.btnSignIn);
         getEmail = findViewById(R.id.getEmail);
         getPassword = findViewById(R.id.getPassword);
 
+        // GETTING ELEMENT VALUE
         emailEditText = (TextInputEditText)getEmail.getEditText();
         passwordEditText = (TextInputEditText)getPassword.getEditText();
 
-        signupLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent mainIntent = new Intent(Login.this, Registration.class);
-                startActivity(mainIntent);
-            }
+        // HANDLING SIGNUP BUTTON
+        signupLink.setOnClickListener(view -> startActivity(new Intent(this, Registration.class)));
+
+        // HANDLING SUBMIT BUTTON
+        btnSignIn.setOnClickListener(view -> {
+            String email = emailEditText.getText().toString().trim();
+            String password = passwordEditText.getText().toString().trim();
+
+            getEmail.setError(email.isEmpty()?"Email is required":null);
+            getPassword.setError(password.isEmpty()?"Password is required":null);
+
+            if (!email.isEmpty() && !password.isEmpty()) loginUser(email, password);
         });
-
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = emailEditText.getText().toString().trim();
-                String password = passwordEditText.getText().toString().trim();
-
-                if (email.isEmpty()) {
-                    getEmail.setError("Email is required");
-                } else {
-                    getEmail.setError(null);
-                }
-
-                if (password.isEmpty()) {
-                    getPassword.setError("Password is required");
-                } else {
-                    getPassword.setError(null);
-                }
-            }
-        });
+    }
+    private void loginUser(String email, String password) {
+        System.out.println(email+" "+password);
+        startActivity(new Intent(this, Profile.class));
     }
 }
