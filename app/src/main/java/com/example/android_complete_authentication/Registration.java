@@ -16,9 +16,10 @@ public class Registration extends AppCompatActivity {
 
     private TextView signInLink;
     private Button btnSignUp;
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
     private TextInputLayout getName, getEmail, getPassword;
     private TextInputEditText nameEditText, emailEditText, passwordEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +52,13 @@ public class Registration extends AppCompatActivity {
 
         // HANDLING SUBMIT BUTTON
         btnSignUp.setOnClickListener(view -> {
+            String name = nameEditText.getText().toString().trim();
             String email = emailEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
-            String name = nameEditText.getText().toString().trim();
 
+            getName.setError(name.isEmpty() ? "Name is required" : null);
             getEmail.setError(email.isEmpty() ? "Email is required" : null);
             getPassword.setError(password.isEmpty() ? "Password is required" : null);
-            getName.setError(name.isEmpty() ? "Name is required" : null);
 
             if (!email.isEmpty() && !password.isEmpty() && !name.isEmpty()) registerUser(email, password, name);
         });
