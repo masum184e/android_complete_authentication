@@ -3,12 +3,12 @@ package com.example.android_complete_authentication.models;
 public class RegistrationRequest {
     private String email;
     private String password;
-    private String name;
+    private String fullname;
 
-    public RegistrationRequest(String name, String email, String password) {
+    public RegistrationRequest(String fullname, String email, String password) {
         this.email = email;
         this.password = password;
-        this.name = name;
+        this.fullname = fullname;
     }
 
     public String getEmail() {
@@ -20,6 +20,6 @@ public class RegistrationRequest {
     }
 
     public String getName() {
-        return name;
+        return fullname;
     }
 }
