@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.android_complete_authentication.Login;
 import com.example.android_complete_authentication.R;
 import com.example.android_complete_authentication.api.ApiService;
@@ -84,6 +85,11 @@ public class ProfileFragment extends Fragment {
                     ProfileModel profile = response.body().getProfile();
                     userName.setText(profile.getFullname());
                     userEmail.setText(profile.getEmail());
+                    String imageUrl="http://10.0.2.2:80/php_complete_authentication/uploads/"+profile.getProfilePicture();
+                    Glide.with(getContext())
+                            .load(imageUrl)
+                            .error(R.drawable.avatar)
+                            .into(userProfilePicture);
                 } else {
                     Toast.makeText(getContext(), "Failed to fetch data", Toast.LENGTH_LONG).show();
                 }
