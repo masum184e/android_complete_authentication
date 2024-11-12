@@ -9,10 +9,12 @@ public class RetrofitClient {
     public static ApiService getApiService() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-//                    .baseUrl("http://10.0.2.2:80/")
-                    .baseUrl("http://30.0.0.150:80/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+                // LOCALHOST
+                // .baseUrl("http://10.0.2.2:80/")
+                // SALAM HALL
+                .baseUrl("http://30.0.7.240:80/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         }
         return retrofit.create(ApiService.class);
     }

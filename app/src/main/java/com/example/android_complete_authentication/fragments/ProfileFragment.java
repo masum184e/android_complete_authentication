@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.android_complete_authentication.EditProfileActivity;
 import com.example.android_complete_authentication.Login;
 import com.example.android_complete_authentication.R;
 import com.example.android_complete_authentication.api.ApiService;
@@ -49,6 +50,9 @@ public class ProfileFragment extends Fragment {
 
         // HANDLING LOG OUT
         logoutBtn.setOnClickListener(v -> logout());
+
+        // HANDLING EDIT BUTTON
+        editBtn.setOnClickListener(v->startActivity(new Intent(getContext(), EditProfileActivity.class)));
 
         // CHECKING TOKEN
         bearerToken = sharedPreferences.getString("authToken", null);
@@ -85,7 +89,7 @@ public class ProfileFragment extends Fragment {
                     ProfileModel profile = response.body().getProfile();
                     userName.setText(profile.getFullname());
                     userEmail.setText(profile.getEmail());
-                    String imageUrl="http://10.0.2.2:80/php_complete_authentication/uploads/"+profile.getProfilePicture();
+                    String imageUrl="http://30.0.7.240:80/php_complete_authentication/uploads/"+profile.getProfilePicture();
                     Glide.with(getContext())
                             .load(imageUrl)
                             .error(R.drawable.avatar)
