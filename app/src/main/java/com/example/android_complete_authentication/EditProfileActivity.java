@@ -14,6 +14,20 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.android_complete_authentication.api.ApiService;
+import com.example.android_complete_authentication.api.RetrofitClient;
+import com.example.android_complete_authentication.models.CommonAPIResponse;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class EditProfileActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private Button selectImgBtn, uploadImgBtn;
@@ -61,7 +75,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     imageUri = result.getData().getData();
                     userProfilePicture.setImageURI(imageUri);
-                }else{
+                } else {
                     Toast.makeText(this, "Something Went Wrong", Toast.LENGTH_LONG).show();
                 }
             });
@@ -72,6 +86,53 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void uploadImage(String bearerToken) {
-        Toast.makeText(this, "Uploading image..."+imageUri, Toast.LENGTH_LONG).show();
+        if (imageUri != null) {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+
+                RequestBody requestFile = new RequestBody() {
+                    @Override
+                    public MediaType contentType() {
+                        return MediaType.parse(getContentResolver().getType(imageUri));
+                    }
+
+                    @Override
+                    public void writeTo(okio.BufferedSink sink) throws java.io.IOException {
+                        byte[] buffer = new byte[8192];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            sink.write(buffer, 0, bytesRead);
+                        }
+                    }
+                };
+
+                MultipartBody.Part body = MultipartBody.Part.createFormData("profilePicture", "image.jpg", requestFile);
+
+                String token = "Bearer " + bearerToken;
+
+                ApiService apiService = RetrofitClient.getApiService();
+                Call<CommonAPIResponse> call = apiService.uploadProfilePicture(token, body);
+
+                call.enqueue(new Callback<CommonAPIResponse>() {
+                    @Override
+                    public void onResponse(Call<CommonAPIResponse> call, Response<CommonAPIResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            Toast.makeText(EditProfileActivity.this, response.body().getMessage(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(EditProfileActivity.this, "Upload failed", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CommonAPIResponse> call, Throwable t) {
+                        Toast.makeText(EditProfileActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                Toast.makeText(this, "File not found: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "File Path Selection Error", Toast.LENGTH_LONG).show();
+        }
     }
 }
