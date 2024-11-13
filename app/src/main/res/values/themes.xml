@@ -6,4 +6,5 @@
     </style>
 
     <style name="Theme.Android_complete_authentication" parent="Base.Theme.Android_complete_authentication" />
+    <style name="AppBarTheme" parent="Theme.AppCompat.Light.DarkActionBar" />
 </resources>

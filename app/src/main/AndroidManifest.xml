@@ -22,7 +22,7 @@
         <activity
             android:name=".EditProfileActivity"
             android:exported="false"
-            android:theme="@style/Theme.Android_complete_authentication" />
+            android:theme="@style/AppBarTheme" />
         <activity
             android:name=".Profile"
             android:exported="false"

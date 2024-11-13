@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android_complete_authentication.api.ApiService;
@@ -48,6 +49,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_edit_profile);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("Edit Profile");
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         selectImgBtn = findViewById(R.id.selectImgBtn);
         uploadImgBtn = findViewById(R.id.uploadImgBtn);
         userProfilePicture = findViewById(R.id.userProfilePicture);
@@ -61,6 +68,12 @@ public class EditProfileActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please select an image first", Toast.LENGTH_LONG).show();
             }
         });
+    }
+    
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     private void unauthorizedUser() {
